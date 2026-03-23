@@ -2,54 +2,25 @@
 
 ## Image folders
 
-- Put original images into `images/products/full/`
+- Put original images into `images/products/source/`
 - Small images are created in `images/products/thumbs/`
-
-## Quick setup
-
-- Open CMD in the project folder:
-
-```cmd
-cd C:\Users\YourName\Desktop\BabyStore
-```
-
-## Check Python
-
-```cmd
-python --version
-```
-
-## Install Pillow
-
-```cmd
-pip install Pillow
-```
-
-## If it does not work
-
-```cmd
-py -m pip install Pillow
-```
+- Large optimized images are created in `images/products/full/`
 
 ## Run resize script
 
-```cmd
-python resize_images.py
+- You can right-click resize_images.ps1 and choose Run with PowerShell.
+
+Or run it manually:
+
+- Open PowerShell in the project folder:
+
+```powershell
+cd C:\Projects\BabyStore
 ```
 
-## Or
-
-```cmd
-py resize_images.py
+```powershell
+powershell -ExecutionPolicy Bypass -File .\resize_images.ps1
 ```
-
-## If Python is not installed
-
-- Download Python from:
-  https://www.python.org/downloads/
-- Run installer
-- Enable `Add Python to PATH`
-- Click `Install Now`
 
 ## How to add a product
 
@@ -70,19 +41,23 @@ py resize_images.py
 ## Put original image here
 
 ```text
-images/products/full/toy9.jpg
+images/products/source/toy9.jpg
 ```
 
 ## Run
+You can right-click resize_images.ps1 and choose Run with PowerShell.
 
-```cmd
-python resize_images.py
+Or run it manually:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\resize_images.ps1
 ```
 
-## Check that this file was created
+## Check that these files were created
 
 ```text
 images/products/thumbs/toy9.jpg
+images/products/full/toy9.jpg
 ```
 
 ## Rules
@@ -90,5 +65,7 @@ images/products/thumbs/toy9.jpg
 - `id` must be unique
 - `category` must be `toys`, `clothes`, or `accessories`
 - file names must match exactly
+- put original files into `source`
 - use `thumbs` for card image
 - use `full` for popup image
+```
