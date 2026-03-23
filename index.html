@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BabyStore</title>
+    <link rel="icon" type="image/png" href="images/logo.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <img src="images/logo.png" alt="BabyStore Logo" id="logo">
+            <div class="header-controls">
+                <select id="language">
+                    <option value="en">EN</option>
+                    <option value="lv">LV</option>
+                    <option value="ru">RU</option>
+                </select>
+
+                <select id="category-filter">
+                    <option value="all">All Categories</option>
+                    <option value="toys">Toys</option>
+                    <option value="clothes">Clothes</option>
+                    <option value="accessories">Accessories</option>
+                </select>
+
+                <input type="text" id="search" placeholder="Search...">
+                <button id="cart-button" data-count="0">Cart</button>
+            </div>
+        </header>
+
+        <nav>
+            <a href="#about" id="about-nav">About Us</a>
+            <a href="#contacts" id="contacts-nav">Contacts</a>
+            <a href="#delivery" id="delivery-nav">Delivery</a>
+        </nav>
+
+        <section class="catalog" id="catalog"></section>
+
+        <section id="about">
+            <h2 id="about-title">About Us</h2>
+            <p id="about-text">
+                Welcome to BabyStore! We offer a wide range of products for your little ones, from toys to clothes and
+                accessories. Our mission is to provide high-quality items that are safe, fun, and affordable.
+            </p>
+        </section>
+
+        <section id="contacts">
+            <h2 id="contacts-title">Contacts</h2>
+            <p id="contacts-text">If you have any questions, feel free to contact us:</p>
+            <ul id="contacts-list">
+                <li>Email: info@babystore.com</li>
+                <li>Phone: +123 456 7890</li>
+                <li>Address: 123 Baby Street, Happy Town</li>
+            </ul>
+        </section>
+
+        <section id="delivery">
+            <h2 id="delivery-title">Delivery</h2>
+            <p id="delivery-text">We offer fast and reliable delivery services. Here are our delivery options:</p>
+            <ul id="delivery-list">
+                <li>Standard Delivery: 3-5 business days</li>
+                <li>Express Delivery: 1-2 business days</li>
+                <li>Free Delivery for orders over €50</li>
+            </ul>
+        </section>
+
+        <div class="cart-container" id="cart-container">
+            <h2 id="cart-title">Cart</h2>
+            <ul id="cart-items"></ul>
+
+            <form id="checkout-form">
+                <input type="text" id="first-name" placeholder="First Name" required>
+                <input type="text" id="last-name" placeholder="Last Name" required>
+                <input type="tel" id="phone" placeholder="Phone Number" required>
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="checkbox" id="botcheck" class="hidden-field" tabindex="-1" autocomplete="off">
+            </form>
+
+            <button id="checkout-btn" onclick="checkout()">Checkout</button>
+            <button id="continue-btn" onclick="continueShopping()">Continue Shopping</button>
+        </div>
+    </div>
+
+    <div id="image-modal" class="image-modal">
+        <div class="image-modal-content">
+            <img id="image-modal-img" src="" alt="Preview">
+        </div>
+    </div>
+
+    <script src="translations.js"></script>
+    <script src="products.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
