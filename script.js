@@ -1,6 +1,13 @@
 const WEB3FORMS_ACCESS_KEY = "bb82a359-5a45-49fc-964f-429bdb6c4182";
 const CART_STORAGE_KEY = "babystore_cart";
 
+const state = {
+    lang: "en",
+    category: "all",
+    search: "",
+    mobileMenuOpen: false
+};
+
 let cart = loadCartFromStorage();
 
 function loadCartFromStorage() {
@@ -25,6 +32,22 @@ function getProductName(product, lang) {
     return `${translations[lang].toy} ${product.id}`;
 }
 
+function syncAllControls() {
+    const language = document.getElementById("language");
+    const languageMobile = document.getElementById("language-mobile");
+    const category = document.getElementById("category-filter");
+    const categoryMobile = document.getElementById("category-filter-mobile");
+    const search = document.getElementById("search");
+    const searchMobile = document.getElementById("search-mobile");
+
+    if (language) language.value = state.lang;
+    if (languageMobile) languageMobile.value = state.lang;
+    if (category) category.value = state.category;
+    if (categoryMobile) categoryMobile.value = state.category;
+    if (search) search.value = state.search;
+    if (searchMobile) searchMobile.value = state.search;
+}
+
 function openImageModal(src, alt) {
     const modal = document.getElementById("image-modal");
     const modalImg = document.getElementById("image-modal-img");
@@ -41,17 +64,18 @@ function closeImageModal() {
 
     modal.classList.remove("open");
     modalImg.src = "";
-    document.body.style.overflow = "";
+    modalImg.alt = "";
+
+    if (!state.mobileMenuOpen) {
+        document.body.style.overflow = "";
+    }
 }
 
 function getFilteredProducts(lang) {
-    const category = document.getElementById("category-filter").value;
-    const searchTerm = document.getElementById("search").value.trim().toLowerCase();
-
     return products.filter(product => {
         const productName = getProductName(product, lang).toLowerCase();
-        const matchesCategory = category === "all" || product.category === category;
-        const matchesSearch = productName.includes(searchTerm);
+        const matchesCategory = state.category === "all" || product.category === state.category;
+        const matchesSearch = productName.includes(state.search.trim().toLowerCase());
 
         return matchesCategory && matchesSearch;
     });
@@ -71,6 +95,16 @@ function renderProducts(lang) {
     const catalog = document.getElementById("catalog");
     catalog.innerHTML = "";
 
+    if (!Array.isArray(products) || products.length === 0) {
+        catalog.innerHTML = `
+            <div class="empty-state">
+                <h3>Products not found</h3>
+                <p>Check products.js file.</p>
+            </div>
+        `;
+        return;
+    }
+
     const filteredProducts = getFilteredProducts(lang);
 
     if (filteredProducts.length === 0) {
@@ -87,23 +121,38 @@ function renderProducts(lang) {
             <img src="${product.image}" alt="${productName}" onclick="openImageModal('${product.fullImage}', '${productName}')">
             <h2>${productName}</h2>
             <p>${translations[lang].price} €${product.price.toFixed(2)}</p>
-            <input type="number" value="1" min="1" id="qty-${product.id}">
-            <button onclick="addToCart(${product.id}, '${productName}', ${product.price})">${translations[lang].addToCart}</button>
+            <div class="product-actions">
+                <input type="number" value="1" min="1" id="qty-${product.id}" class="product-qty">
+                <button type="button" onclick="addToCart(${product.id}, '${productName}', ${product.price})">${translations[lang].addToCart}</button>
+            </div>
         `;
         catalog.appendChild(productElement);
     });
 }
 
 function addToCart(id, name, price) {
-    const quantity = parseInt(document.getElementById(`qty-${id}`).value, 10);
-    const item = { id, name, price, quantity };
+    const quantityInput = document.getElementById(`qty-${id}`);
+    const quantityToAdd = quantityInput ? parseInt(quantityInput.value, 10) || 1 : 1;
 
-    cart.push(item);
+    const existingItem = cart.find(item => item.id === id);
+
+    if (existingItem) {
+        existingItem.quantity += quantityToAdd;
+    } else {
+        cart.push({
+            id,
+            name,
+            price,
+            quantity: quantityToAdd
+        });
+    }
+
     saveCartToStorage();
     updateCart();
-    document.getElementById("cart-container").style.display = "none";
     updateCartButton();
+    document.getElementById("cart-container").style.display = "none";
 }
+
 
 function removeFromCart(index) {
     cart.splice(index, 1);
@@ -120,7 +169,7 @@ function clearCart() {
 }
 
 function updateCart() {
-    const lang = document.getElementById("language").value;
+    const lang = state.lang;
     const cartItems = document.getElementById("cart-items");
     cartItems.innerHTML = "";
 
@@ -145,11 +194,20 @@ function updateCart() {
 function updateCartButton() {
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     const cartButton = document.getElementById("cart-button");
-    cartButton.setAttribute("data-count", totalItems);
+    const cartButtonMobile = document.getElementById("cart-button-mobile");
+
+    if (cartButton) cartButton.setAttribute("data-count", totalItems);
+    if (cartButtonMobile) cartButtonMobile.setAttribute("data-count", totalItems);
 }
 
 function checkout() {
-    const lang = document.getElementById("language").value;
+    const lang = state.lang;
+
+    if (!cart.length) {
+        alert(translations[lang].cartEmpty || "Cart is empty");
+        return;
+    }
+
     const firstName = document.getElementById("first-name").value.trim();
     const lastName = document.getElementById("last-name").value.trim();
     const phone = document.getElementById("phone").value.trim();
@@ -162,6 +220,7 @@ function checkout() {
 
     sendCartToServer(cart, firstName, lastName, phone, email, lang);
 }
+
 
 async function sendCartToServer(cart, firstName, lastName, phone, email, lang) {
     try {
@@ -214,21 +273,37 @@ function continueShopping() {
 }
 
 function updateCategoryFilter(lang) {
-    const categoryFilter = document.getElementById("category-filter");
-    categoryFilter.innerHTML = `
+    const options = `
         <option value="all">${translations[lang].allCategories}</option>
         <option value="toys">${translations[lang].toys}</option>
         <option value="clothes">${translations[lang].clothes}</option>
         <option value="accessories">${translations[lang].accessories}</option>
     `;
+
+    document.getElementById("category-filter").innerHTML = options;
+    document.getElementById("category-filter-mobile").innerHTML = options;
+
+    syncAllControls();
 }
 
 function updateTranslations(lang) {
     document.getElementById("search").placeholder = translations[lang].search;
+    document.getElementById("search-mobile").placeholder = translations[lang].search;
+
     document.getElementById("cart-button").textContent = translations[lang].cart;
+    document.getElementById("cart-button-mobile").textContent = translations[lang].cart;
+
+    document.getElementById("catalog-nav").textContent = translations[lang].catalog || "Catalog";
+    document.getElementById("catalog-nav-mobile").textContent = translations[lang].catalog || "Catalog";
+
     document.getElementById("about-nav").textContent = translations[lang].about;
     document.getElementById("contacts-nav").textContent = translations[lang].contacts;
     document.getElementById("delivery-nav").textContent = translations[lang].delivery;
+
+    document.getElementById("about-nav-mobile").textContent = translations[lang].about;
+    document.getElementById("contacts-nav-mobile").textContent = translations[lang].contacts;
+    document.getElementById("delivery-nav-mobile").textContent = translations[lang].delivery;
+
     document.getElementById("about-title").textContent = translations[lang].about;
     document.getElementById("about-text").textContent = translations[lang].aboutText;
     document.getElementById("contacts-title").textContent = translations[lang].contacts;
@@ -249,21 +324,88 @@ function updateTranslations(lang) {
     updateCartButton();
 }
 
-document.getElementById("language").addEventListener("change", (e) => {
-    updateTranslations(e.target.value);
-});
-
-document.getElementById("category-filter").addEventListener("change", () => {
-    renderProducts(document.getElementById("language").value);
-});
-
-document.getElementById("search").addEventListener("input", () => {
-    renderProducts(document.getElementById("language").value);
-});
-
-document.getElementById("cart-button").addEventListener("click", () => {
+function toggleCart() {
     const cartContainer = document.getElementById("cart-container");
     cartContainer.style.display = cartContainer.style.display === "block" ? "none" : "block";
+}
+
+function openMobileMenu() {
+    const toggle = document.getElementById("nav-toggle");
+    const menu = document.getElementById("mobile-menu");
+
+    state.mobileMenuOpen = true;
+    menu.classList.add("open");
+    toggle.classList.add("active");
+    toggle.setAttribute("aria-expanded", "true");
+    document.body.classList.add("menu-open");
+}
+
+function closeMobileMenu() {
+    const toggle = document.getElementById("nav-toggle");
+    const menu = document.getElementById("mobile-menu");
+
+    state.mobileMenuOpen = false;
+    menu.classList.remove("open");
+    toggle.classList.remove("active");
+    toggle.setAttribute("aria-expanded", "false");
+
+    if (!document.getElementById("image-modal").classList.contains("open")) {
+        document.body.classList.remove("menu-open");
+    }
+}
+
+function toggleMobileMenu() {
+    if (state.mobileMenuOpen) {
+        closeMobileMenu();
+    } else {
+        openMobileMenu();
+    }
+}
+
+document.getElementById("language").addEventListener("change", (e) => {
+    state.lang = e.target.value;
+    syncAllControls();
+    updateTranslations(state.lang);
+});
+
+document.getElementById("language-mobile").addEventListener("change", (e) => {
+    state.lang = e.target.value;
+    syncAllControls();
+    updateTranslations(state.lang);
+});
+
+document.getElementById("category-filter").addEventListener("change", (e) => {
+    state.category = e.target.value;
+    syncAllControls();
+    renderProducts(state.lang);
+});
+
+document.getElementById("category-filter-mobile").addEventListener("change", (e) => {
+    state.category = e.target.value;
+    syncAllControls();
+    renderProducts(state.lang);
+});
+
+document.getElementById("search").addEventListener("input", (e) => {
+    state.search = e.target.value;
+    syncAllControls();
+    renderProducts(state.lang);
+});
+
+document.getElementById("search-mobile").addEventListener("input", (e) => {
+    state.search = e.target.value;
+    syncAllControls();
+    renderProducts(state.lang);
+});
+
+document.getElementById("cart-button").addEventListener("click", toggleCart);
+document.getElementById("cart-button-mobile").addEventListener("click", toggleCart);
+document.getElementById("nav-toggle").addEventListener("click", toggleMobileMenu);
+
+document.querySelectorAll("[data-close-menu='true']").forEach(link => {
+    link.addEventListener("click", () => {
+        closeMobileMenu();
+    });
 });
 
 document.getElementById("image-modal").addEventListener("click", (e) => {
@@ -275,9 +417,17 @@ document.getElementById("image-modal").addEventListener("click", (e) => {
 document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
         closeImageModal();
+        closeMobileMenu();
     }
 });
 
-updateTranslations("en");
+window.addEventListener("resize", () => {
+    if (window.innerWidth > 980) {
+        closeMobileMenu();
+    }
+});
+
+syncAllControls();
+updateTranslations(state.lang);
 updateCart();
 updateCartButton();

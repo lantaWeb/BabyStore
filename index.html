@@ -10,63 +10,124 @@
 </head>
 
 <body>
-    <div class="container">
-        <header>
-            <img src="images/logo.png" alt="BabyStore Logo" id="logo">
-            <div class="header-controls">
-                <select id="language">
-                    <option value="en">EN</option>
-                    <option value="lv">LV</option>
-                    <option value="ru">RU</option>
-                </select>
+    <div class="page-shell">
+        <header class="site-header">
+            <div class="container">
+                <div class="topbar">
+                    <a href="#" class="brand" aria-label="BabyStore home">
+                        <img src="images/logo.png" alt="BabyStore Logo" id="logo">
+                        <div class="brand-text">
+                            <span class="brand-title">BabyStore</span>
+                            <span class="brand-subtitle">Cute things for little ones</span>
+                        </div>
+                    </a>
 
-                <select id="category-filter">
-                    <option value="all">All Categories</option>
-                    <option value="toys">Toys</option>
-                    <option value="clothes">Clothes</option>
-                    <option value="accessories">Accessories</option>
-                </select>
+                    <button class="nav-toggle" id="nav-toggle" type="button" aria-label="Open navigation"
+                        aria-expanded="false" aria-controls="mobile-menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
 
-                <input type="text" id="search" placeholder="Search...">
-                <button id="cart-button" data-count="0">Cart</button>
+                    <div class="desktop-controls">
+                        <select id="language">
+                            <option value="en">EN</option>
+                            <option value="lv">LV</option>
+                            <option value="ru">RU</option>
+                        </select>
+
+                        <select id="category-filter">
+                            <option value="all">All Categories</option>
+                            <option value="toys">Toys</option>
+                            <option value="clothes">Clothes</option>
+                            <option value="accessories">Accessories</option>
+                        </select>
+
+                        <div class="search-wrap">
+                            <input type="text" id="search" placeholder="Search...">
+                        </div>
+
+                        <button id="cart-button" data-count="0" type="button">Cart</button>
+                    </div>
+                </div>
+
+                <nav class="main-nav" aria-label="Main navigation">
+                    <div class="nav-links desktop-nav-links">
+                        <a href="#catalog" id="catalog-nav">Catalog</a>
+                        <a href="#about" id="about-nav">About Us</a>
+                        <a href="#contacts" id="contacts-nav">Contacts</a>
+                        <a href="#delivery" id="delivery-nav">Delivery</a>
+                    </div>
+                </nav>
+
+                <div class="mobile-menu" id="mobile-menu">
+                    <div class="mobile-menu-inner">
+                        <div class="mobile-nav-links">
+                            <a href="#catalog" class="mobile-nav-link" id="catalog-nav-mobile"
+                                data-close-menu="true">Catalog</a>
+                            <a href="#about" class="mobile-nav-link" id="about-nav-mobile" data-close-menu="true">About
+                                Us</a>
+                            <a href="#contacts" class="mobile-nav-link" id="contacts-nav-mobile"
+                                data-close-menu="true">Contacts</a>
+                            <a href="#delivery" class="mobile-nav-link" id="delivery-nav-mobile"
+                                data-close-menu="true">Delivery</a>
+                        </div>
+
+                        <div class="mobile-controls">
+                            <select id="language-mobile" aria-label="Language">
+                                <option value="en">EN</option>
+                                <option value="lv">LV</option>
+                                <option value="ru">RU</option>
+                            </select>
+
+                            <select id="category-filter-mobile" aria-label="Category filter">
+                                <option value="all">All Categories</option>
+                                <option value="toys">Toys</option>
+                                <option value="clothes">Clothes</option>
+                                <option value="accessories">Accessories</option>
+                            </select>
+
+                            <input type="text" id="search-mobile" placeholder="Search..." aria-label="Search products">
+
+                            <button id="cart-button-mobile" data-count="0" type="button">Cart</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </header>
 
-        <nav>
-            <a href="#about" id="about-nav">About Us</a>
-            <a href="#contacts" id="contacts-nav">Contacts</a>
-            <a href="#delivery" id="delivery-nav">Delivery</a>
-        </nav>
+        <main class="container main-content">
+            <section class="catalog" id="catalog"></section>
 
-        <section class="catalog" id="catalog"></section>
+            <section id="about" class="content-section">
+                <h2 id="about-title">About Us</h2>
+                <p id="about-text">
+                    Welcome to BabyStore! We offer a wide range of products for your little ones, from toys to clothes
+                    and
+                    accessories. Our mission is to provide high-quality items that are safe, fun, and affordable.
+                </p>
+            </section>
 
-        <section id="about">
-            <h2 id="about-title">About Us</h2>
-            <p id="about-text">
-                Welcome to BabyStore! We offer a wide range of products for your little ones, from toys to clothes and
-                accessories. Our mission is to provide high-quality items that are safe, fun, and affordable.
-            </p>
-        </section>
+            <section id="contacts" class="content-section">
+                <h2 id="contacts-title">Contacts</h2>
+                <p id="contacts-text">If you have any questions, feel free to contact us:</p>
+                <ul id="contacts-list">
+                    <li>Email: info@babystore.com</li>
+                    <li>Phone: +123 456 7890</li>
+                    <li>Address: 123 Baby Street, Happy Town</li>
+                </ul>
+            </section>
 
-        <section id="contacts">
-            <h2 id="contacts-title">Contacts</h2>
-            <p id="contacts-text">If you have any questions, feel free to contact us:</p>
-            <ul id="contacts-list">
-                <li>Email: info@babystore.com</li>
-                <li>Phone: +123 456 7890</li>
-                <li>Address: 123 Baby Street, Happy Town</li>
-            </ul>
-        </section>
-
-        <section id="delivery">
-            <h2 id="delivery-title">Delivery</h2>
-            <p id="delivery-text">We offer fast and reliable delivery services. Here are our delivery options:</p>
-            <ul id="delivery-list">
-                <li>Standard Delivery: 3-5 business days</li>
-                <li>Express Delivery: 1-2 business days</li>
-                <li>Free Delivery for orders over €50</li>
-            </ul>
-        </section>
+            <section id="delivery" class="content-section">
+                <h2 id="delivery-title">Delivery</h2>
+                <p id="delivery-text">We offer fast and reliable delivery services. Here are our delivery options:</p>
+                <ul id="delivery-list">
+                    <li>Standard Delivery: 3-5 business days</li>
+                    <li>Express Delivery: 1-2 business days</li>
+                    <li>Free Delivery for orders over €50</li>
+                </ul>
+            </section>
+        </main>
 
         <div class="cart-container" id="cart-container">
             <h2 id="cart-title">Cart</h2>
@@ -80,14 +141,16 @@
                 <input type="checkbox" id="botcheck" class="hidden-field" tabindex="-1" autocomplete="off">
             </form>
 
-            <button id="checkout-btn" onclick="checkout()">Checkout</button>
-            <button id="continue-btn" onclick="continueShopping()">Continue Shopping</button>
+            <div class="cart-actions">
+                <button id="checkout-btn" onclick="checkout()">Checkout</button>
+                <button id="continue-btn" class="secondary-btn" onclick="continueShopping()">Continue Shopping</button>
+            </div>
         </div>
-    </div>
 
-    <div id="image-modal" class="image-modal">
-        <div class="image-modal-content">
-            <img id="image-modal-img" src="" alt="Preview">
+        <div id="image-modal" class="image-modal">
+            <div class="image-modal-content">
+                <img id="image-modal-img" src="" alt="Preview">
+            </div>
         </div>
     </div>
 
