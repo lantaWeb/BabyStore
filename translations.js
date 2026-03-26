@@ -1,5 +1,6 @@
 const translations = {
     en: {
+        catalog: "Catalog",
         search: "Search...",
         cart: "Cart",
         addToCart: "Add to Cart",
@@ -29,9 +30,9 @@ const translations = {
         noProductsText: "Try another search or choose a different category.",
         remove: "Remove",
         cartEmpty: "Cart is empty"
-
     },
     lv: {
+        catalog: "Katalogs",
         search: "Meklēt...",
         cart: "Grozs",
         addToCart: "Pievienot grozam",
@@ -61,9 +62,9 @@ const translations = {
         noProductsText: "Pamēģiniet citu meklēšanu vai izvēlieties citu kategoriju.",
         remove: "Dzēst",
         cartEmpty: "Grozs ir tukšs"
-
     },
     ru: {
+        catalog: "Каталог",
         search: "Поиск...",
         cart: "Корзина",
         addToCart: "Добавить в корзину",
@@ -93,6 +94,5 @@ const translations = {
         noProductsText: "Попробуйте другой запрос или выберите другую категорию.",
         remove: "Удалить",
         cartEmpty: "Корзина пуста"
-
     }
 };
